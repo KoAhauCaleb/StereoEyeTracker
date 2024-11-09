@@ -10,7 +10,7 @@ from mediapipe.tasks.python import vision
 from mediapipe import solutions
 from mediapipe.framework.formats import landmark_pb2
 
-model = "face_landmarker_v2_with_blendshapes.task"
+model = "C:/Users/Caleb/OneDrive/BYUI/Fall2024/SeniorProject/GithubProject/Models/face_landmarker_v2_with_blendshapes.task"
 
 RESULT = None
 

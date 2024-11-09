@@ -12,7 +12,7 @@ from mediapipe import solutions
 from mediapipe.framework.formats import landmark_pb2
 from pycparser.ply.yacc import restart
 
-model = "face_landmarker_v2_with_blendshapes.task"
+model = "C:/Users/Caleb/OneDrive/BYUI/Fall2024/SeniorProject/GithubProject/Models/face_landmarker_v2_with_blendshapes.task"
 
 RESULT = None
 
