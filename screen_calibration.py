@@ -4,7 +4,7 @@ import tkinter as tk
 import screeninfo
 
 root = tk.Tk()
-SCREEN_WIDTH = root.winfo_screenwidth() + 59
+SCREEN_WIDTH = root.winfo_screenwidth()# + 59
 SCREEN_HEIGHT = root.winfo_screenheight()
 root.destroy()
 
@@ -30,10 +30,8 @@ CALIBRATION_POINTS = [
 
 def show_calibration_point_full_screen(point):
     """Display a single calibration point on the screen in full screen mode."""
-    screen = screeninfo.get_monitors()[0]  # Assuming a single monitor setup
-    screen_width, screen_height = screen.width + 59, screen.height
     # Create a black screen
-    image = np.zeros((screen_height, screen_width, 3), dtype=np.uint8)
+    image = np.zeros((SCREEN_HEIGHT, SCREEN_WIDTH, 3), dtype=np.uint8)
 
     # Draw the calibration point (green circle)
     cv2.circle(image, (int(point[0]), int(point[1])), 20, (0, 255, 0), -1)
