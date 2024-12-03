@@ -1,19 +1,18 @@
 import cv2
 import numpy as np
 import tkinter as tk
-import screeninfo
 
 root = tk.Tk()
-SCREEN_WIDTH = root.winfo_screenwidth()# + 59
+SCREEN_WIDTH = root.winfo_screenwidth() + 59
 SCREEN_HEIGHT = root.winfo_screenheight()
 root.destroy()
 
-left = SCREEN_WIDTH * 0.2
-middle_width = SCREEN_WIDTH * 0.5
-right = SCREEN_WIDTH * 0.8
-top = SCREEN_HEIGHT * 0.2
-middle_height = SCREEN_HEIGHT * 0.5
-bottom = SCREEN_HEIGHT * 0.8
+left = int(SCREEN_WIDTH * 0.2)
+middle_width = int(SCREEN_WIDTH * 0.5)
+right = int(SCREEN_WIDTH * 0.8)
+top = int(SCREEN_HEIGHT * 0.2)
+middle_height = int(SCREEN_HEIGHT * 0.5)
+bottom = int(SCREEN_HEIGHT * 0.8)
 
 # Calibration points (e.g., a 3x3 grid)
 CALIBRATION_POINTS = [
@@ -28,13 +27,24 @@ CALIBRATION_POINTS = [
     (right,         bottom),  # Bottom-right
 ]
 
+font = cv2.FONT_HERSHEY_SIMPLEX
+font_scale = 2
+color = (255, 255, 255)
+thickness = 5
+
 def show_calibration_point_full_screen(point):
     """Display a single calibration point on the screen in full screen mode."""
     # Create a black screen
     image = np.zeros((SCREEN_HEIGHT, SCREEN_WIDTH, 3), dtype=np.uint8)
 
-    # Draw the calibration point (green circle)
-    cv2.circle(image, (int(point[0]), int(point[1])), 20, (0, 255, 0), -1)
+    # adjust point to be centered based on the size of the text
+    (text_width, text_height), baseline = cv2.getTextSize("+", font, font_scale, thickness)
+    x = point[0] - int(text_width // 2)
+    y = point[1] - int(text_height // 2)
+    position = (x, y)
+    # Draw the calibration point (+)
+    cv2.putText(image, "+", position, font, font_scale, color, thickness)
+    #cv2.circle(image, (int(point[0]), int(point[1])), 20, (0, 255, 0), -1)
 
     # Set up the OpenCV window in full-screen mode
     window_name = "Calibration"
@@ -53,11 +63,31 @@ def get_gaze_data():
     # Example: Simulated gaze coordinate
     return (np.random.randint(0, SCREEN_WIDTH), np.random.randint(0, SCREEN_HEIGHT))
 
+
+def show_countdown(count):
+    image = np.zeros((SCREEN_HEIGHT, SCREEN_WIDTH, 3), dtype=np.uint8)
+
+    # text font data
+    (text_width, text_height), baseline = cv2.getTextSize(count, font, font_scale, thickness)
+    x = middle_width - int(text_width // 2)
+    y = middle_height - int(text_height // 2)
+    window_name = "Calibration"
+
+    # display countdown number on screen
+    cv2.putText(image, count, (x, y), font, font_scale, color, thickness)
+    cv2.namedWindow(window_name, cv2.WND_PROP_FULLSCREEN)
+    cv2.setWindowProperty(window_name, cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
+    cv2.imshow(window_name, image)
+    cv2.waitKey(1000)
+
+
 def show_points():
+    countdown = ["3", "2", "1"]
+    for count in countdown:
+        show_countdown(count)
     calibration_data = []
     for point in CALIBRATION_POINTS:
         show_calibration_point_full_screen(point)
-
         # Collect multiple gaze samples for accuracy
         gaze_samples = []
         for _ in range(20):  # Collect 20 samples per point
