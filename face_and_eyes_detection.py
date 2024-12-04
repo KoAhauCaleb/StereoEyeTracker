@@ -1,6 +1,6 @@
 import time
 
-import get_area
+import get_glints
 import cv2
 import mediapipe
 import mediapipe as mp
@@ -15,7 +15,7 @@ model = "face_landmarker.task"
 
 RESULT = None
 
-glints = get_area.GlintPoints(None, None)
+glints = get_glints.GlintPoints(None, None)
 
 frame_counter = 0
 cached_glints_left = []
@@ -29,24 +29,24 @@ def draw_landmarks_on_image(rgb_image, detection_result):
     annotated_image = np.copy(rgb_image)
     shape = rgb_image.shape
 
-    landmarker = get_area.initialize_landmarker()
+    landmarker = get_glints.initialize_landmarker()
 
     frame_counter += 1
 
     if frame_counter % 2 == 0:
         # Detect glints for both eyes
-        cached_glints_right = get_area.GlintPoints(
-            get_area.run(shape, annotated_image, mp.solutions.face_mesh.FACEMESH_RIGHT_IRIS, landmarker),
+        cached_glints_right = get_glints.GlintPoints(
+            get_glints.run(shape, annotated_image, mp.solutions.face_mesh.FACEMESH_RIGHT_IRIS, landmarker),
             None
         ).right_glint
-        cached_glints_left = get_area.GlintPoints(
+        cached_glints_left = get_glints.GlintPoints(
             None,
-            get_area.run(shape, annotated_image, mp.solutions.face_mesh.FACEMESH_LEFT_IRIS, landmarker)
+            get_glints.run(shape, annotated_image, mp.solutions.face_mesh.FACEMESH_LEFT_IRIS, landmarker)
         ).left_glint
 
     # Draw cached glints on the image
-    get_area.circle_image(annotated_image, cached_glints_right)
-    get_area.circle_image(annotated_image, cached_glints_left)
+    get_glints.circle_image(annotated_image, cached_glints_right)
+    get_glints.circle_image(annotated_image, cached_glints_left)
     # Loop through the detected faces to visualize.
     #for idx in range(len(face_landmarks_list)):
     #    face_landmarks = face_landmarks_list[idx]
