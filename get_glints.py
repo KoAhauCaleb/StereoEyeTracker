@@ -54,7 +54,7 @@ def get_eye_boundaries(result, eye, s):
 def detect_glints(cropped, cropped_area, cropped_width):#, eye_name, im_num):
     """ Detect glints in the cropped eye region """
     flat = cropped.flatten()
-    min_threshold = int(np.percentile(flat, 98))
+    min_threshold = int(np.percentile(flat, 98.5))
     _, threshold_image = cv2.threshold(cropped, min_threshold, 255, cv2.THRESH_BINARY)
 
     #cv2.imshow(f"Eye_{eye_name}_{im_num}", threshold_image)
