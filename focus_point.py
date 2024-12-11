@@ -1,6 +1,11 @@
 #import screen_calibration
 import numpy as np
 
+class eye_points:
+    def __init__(self, point):
+        self.point = point
+        pass
+
 def closest_point_between_lines(P1, D1, P2, D2):
     # Normalize direction vectors
     D1 = D1 / np.linalg.norm(D1)
@@ -33,3 +38,29 @@ midpoint = closest_point_between_lines(P_left, D_left, P_right, D_right)
 print(midpoint)
 
 #calibration_points = screen_calibration.get_calibration_points()
+
+def best_fit_plane(points):
+    # Add a column of ones for the d term
+    A = np.c_[points, np.ones(points.shape[0])]
+
+    # Perform Singular Value Decomposition (SVD)
+    _, _, Vt = np.linalg.svd(A)
+
+    # The last row of Vt (or column of V) gives the solution
+    plane = Vt[-1]
+    return plane
+
+points = np.array([
+    [0, 0, 1],
+    [1, 0, 1],
+    [2, 0, 1],
+    [0, 1, 1],
+    [1, 1, 1],
+    [2, 1, 1],
+    [0, 2, 1],
+    [1, 2, 1],
+    [2, 2, 1],
+])
+
+plane = best_fit_plane(points)
+print(f"Plane equation: {plane[0]}x + {plane[1]}y + {plane[2]}z + {plane[3]} = 0")
